@@ -1,5 +1,5 @@
 // Window large lists with react-virtual
-// http://localhost:3000/isolated/exercise/04.js
+// http://localhost:3000/isolated/final/04.js
 
 import * as React from 'react'
 import {useVirtual} from 'react-virtual'
@@ -29,7 +29,7 @@ function Menu({
   return (
     <ul {...getMenuProps({ref: listRef})}>
       <li style={{height: totalHeight}} />
-      {virtualRows.map((index, size, start) => {
+      {virtualRows.map(({index, size, start}) => {
         const item = items[index]
         if (!item) return null
         return (
@@ -40,7 +40,7 @@ function Menu({
             index={index}
             isSelected={selectedItem?.id === item.id}
             isHighlighted={highlightedIndex === index}
-            style={getVirtualRowStyles(size, start)}
+            style={getVirtualRowStyles({size, start})}
           >
             {item.name}
           </ListItem>
@@ -85,6 +85,7 @@ function App() {
   }, [inputValue, run])
 
   const listRef = React.useRef()
+
   const rowVirtualizer = useVirtual({
     size: items.length,
     parentRef: listRef,
@@ -144,8 +145,3 @@ function App() {
 }
 
 export default App
-
-/*
-eslint
-  no-unused-vars: "off",
-*/
