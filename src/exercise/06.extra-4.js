@@ -1,16 +1,9 @@
-// Starting point for the Recoil Extra Credit
-// 💯 use recoil (exercise)
-// http://localhost:3000/isolated/exercise/06.extra-4.js
+// Fix "perf death by a thousand cuts"
+// 💯 use recoil (final)
+// http://localhost:3000/isolated/final/06.extra-4.js
 
 import * as React from 'react'
-import {
-  useForceRerender,
-  useDebouncedState,
-  AppGrid,
-  updateGridState,
-  updateGridCellState,
-} from '../utils'
-// 🐨 you're gonna need these:
+import {useForceRerender, useDebouncedState, AppGrid} from '../utils'
 import {RecoilRoot, useRecoilState, useRecoilCallback, atomFamily} from 'recoil'
 
 const AppStateContext = React.createContext()
@@ -19,19 +12,11 @@ const initialGrid = Array.from({length: 100}, () =>
   Array.from({length: 100}, () => Math.random() * 100),
 )
 
-// 🐨 create an atomFamily called `cellAtoms` here where the
-// default callback function accepts an object with the
-// `row` and `column` and returns the value from the initialGrid
-// 💰 initialGrid[row][column]
 const cellAtoms = atomFamily({
   key: 'cells',
   default: ({row, column}) => initialGrid[row][column],
 })
-// 💰 I'm going to give this hook to you as it's mostly here for our contrived
-// example purposes. Just comment this in when you're ready to use it.
-// Here's how it's used:
-// const updateGrid = useUpdateGrid()
-// then later: updateGrid({rows, columns})
+
 function useUpdateGrid() {
   return useRecoilCallback(({set}) => ({rows, columns}) => {
     for (let row = 0; row < rows; row++) {
@@ -76,12 +61,10 @@ function useAppState() {
 }
 
 function Grid() {
-  // 🐨 we're no longer storing the grid in our app state, so instead you
-  // want to get the updateGrid function from useUpdateGrid
   const updateGrid = useUpdateGrid()
   const [rows, setRows] = useDebouncedState(50)
   const [columns, setColumns] = useDebouncedState(50)
-  const updateGridData = () => updateGrid([rows, columns])
+  const updateGridData = () => updateGrid({rows, columns})
   return (
     <AppGrid
       onUpdateGrid={updateGridData}
@@ -137,6 +120,7 @@ function DogNameInput() {
     </form>
   )
 }
+
 function App() {
   const forceRerender = useForceRerender()
   return (
